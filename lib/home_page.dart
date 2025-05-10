@@ -1,3 +1,5 @@
+import 'package:book_store/details_page.dart';
+import 'package:book_store/favorite_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,7 +19,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.favorite, color: Colors.red[500]),
             onPressed: () {
-              Navigator.pushNamed(context, '/favorites');
+              Navigator.pushNamed(context, FavoritesPage.routName);
             },
           ),
         ],
@@ -41,7 +43,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     'The Silent Patient',
                     'Alex Michael ides',
-                    'assets/book1.jpg',
+                    'description',
                     '\$12.99',
                   ),
                   const SizedBox(width: 16),
@@ -49,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     'Educated',
                     'Tara West over',
-                    'assets/book2.jpg',
+                    'description',
                     '\$14.99',
                   ),
                   const SizedBox(width: 16),
@@ -57,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     'Atomic Habits',
                     'James Clear',
-                    'assets/book3.jpg',
+                    'description',
                     '\$10.99',
                   ),
                 ],
@@ -70,9 +72,11 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 16),
             GridView.count(
-              shrinkWrap: true, //  grid should take as much space as its children
-              physics: const NeverScrollableScrollPhysics(), // Controls scroll behavior
-              crossAxisCount: 2,  // number of columns
+              shrinkWrap:
+                  true, //  grid should take as much space as its children
+              physics:
+                  const NeverScrollableScrollPhysics(), // Controls scroll behavior
+              crossAxisCount: 2, // number of columns
               childAspectRatio: 3, // width to height ratio of each tile
               crossAxisSpacing: 16, // Spacing between rows
               mainAxisSpacing: 16, // Spacing between rows
@@ -93,12 +97,21 @@ class _HomePageState extends State<HomePage> {
     BuildContext context,
     String title,
     String author,
-    String image,
+    String description,
     String price,
   ) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/details');
+        Navigator.pushNamed(
+          context,
+          DetailsPage.routName,
+          arguments: {
+            'title': title,
+            'author': author,
+            'description': description,
+            'price': price,
+          },
+        );
       },
       child: Card(
         elevation: 4,
@@ -149,18 +162,20 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          showModalBottomSheet(context: context, builder: (BuildContext context) {
-            return SizedBox(
-              height: 80,
-              width: double.infinity,
-              child: Center(
-                child: Text('Hello', style: TextStyle(
-                  fontSize: 24, color: Colors.indigo
-                ),)
-                ,
-              ),
-            );
-          },
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return SizedBox(
+                height: 80,
+                width: double.infinity,
+                child: Center(
+                  child: Text(
+                    'Hello',
+                    style: TextStyle(fontSize: 24, color: Colors.indigo),
+                  ),
+                ),
+              );
+            },
           );
         });
       },
