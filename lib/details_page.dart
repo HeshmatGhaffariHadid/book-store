@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
 
-class BookDetailsPage extends StatelessWidget {
-  const BookDetailsPage({super.key});
+class DetailsPage extends StatelessWidget {
+  static const routName = '/details';
+  final String? title;
+  final String? author;
+  final String? description;
+  final String? price;
+
+  const DetailsPage({
+    super.key,
+     this.title,
+     this.author,
+     this.description,
+     this.price,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final routeArguments = ModalRoute.of(context)?.settings.arguments as Map<String, String>;
+    final bookTitle = routeArguments['title'];
+    final bookAuthor = routeArguments['author'];
+    final bookDescription = routeArguments['description'];
+    final bookPrice = routeArguments['price'];
     return Scaffold(
       appBar: AppBar(title: const Text('Book Details')),
       body: SingleChildScrollView(
@@ -21,17 +38,21 @@ class BookDetailsPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     color: Colors.grey[200],
                   ),
-                  child: const Icon(Icons.book, size: 100, color: Colors.indigo),
+                  child: const Icon(
+                    Icons.book,
+                    size: 100,
+                    color: Colors.indigo,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'The Silent Patient',
+              Text(
+                bookTitle ?? 'No title provided',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-               Text(
-                'by Alex Michael ides',
+              Text(
+                bookAuthor ?? 'No author found',
                 style: TextStyle(fontSize: 16, color: Colors.grey[700]),
               ),
               const SizedBox(height: 16),
@@ -43,9 +64,9 @@ class BookDetailsPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-               Text('Price', style: TextStyle(color: Colors.grey[700])),
-              const Text(
-                '\$12.99',
+              Text('Price', style: TextStyle(color: Colors.grey[700])),
+              Text(
+                '\$$bookPrice',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
@@ -54,10 +75,7 @@ class BookDetailsPage extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Alicia Benson\'s life is seemingly perfect. A famous painter married to an in-demand fashion photographer, she lives in a grand house with big windows overlooking a park in one of London\'s most desirable areas. One evening her husband Gabriel returns home late from a fashion shoot, and Alicia shoots him five times in the face, and then never speaks another word.',
-                style: TextStyle(height: 1.5),
-              ),
+              Text(bookDescription ?? 'No description provided', style: TextStyle(height: 1.5)),
               const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
