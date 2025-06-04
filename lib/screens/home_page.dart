@@ -1,6 +1,8 @@
-import 'package:book_store/details_page.dart';
-import 'package:book_store/favorite_page.dart';
+import 'package:book_store/screens/details_page.dart';
+import 'package:book_store/screens/favorite_page.dart';
 import 'package:flutter/material.dart';
+
+import '../constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,7 +21,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.favorite, color: Colors.red[500]),
             onPressed: () {
-              Navigator.pushNamed(context, FavoritesPage.routName);
+              Navigator.pushNamed(context, FavoritesPage.routeName);
             },
           ),
         ],
@@ -44,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                     'The Silent Patient',
                     'Alex Michael ides',
                     'description',
-                    '\$12.99',
+                    12.99,
                   ),
                   const SizedBox(width: 16),
                   _buildFeaturedBook(
@@ -52,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                     'Educated',
                     'Tara West over',
                     'description',
-                    '\$14.99',
+                    14.99,
                   ),
                   const SizedBox(width: 16),
                   _buildFeaturedBook(
@@ -60,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                     'Atomic Habits',
                     'James Clear',
                     'description',
-                    '\$10.99',
+                    10.99,
                   ),
                 ],
               ),
@@ -98,18 +100,18 @@ class _HomePageState extends State<HomePage> {
     String title,
     String author,
     String description,
-    String price,
+    double price,
   ) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(
           context,
-          DetailsPage.routName,
-          arguments: {
+          DetailsPage.routeName,
+          arguments: <String, String>{
             'title': title,
             'author': author,
             'description': description,
-            'price': price,
+            'price': price.toString(),
           },
         );
       },
@@ -123,11 +125,12 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(
                 child: Container(
+                  width: 70,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                     color: Colors.grey[200],
                   ),
-                  child: const Icon(Icons.book, size: 60, color: Colors.indigo),
+                  child: const Icon(Icons.book, size: 60, color: primaryColor),
                 ),
               ),
               const SizedBox(height: 8),
@@ -145,9 +148,9 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 4),
               Text(
-                price,
+                '$price',
                 style: const TextStyle(
-                  color: Colors.indigo,
+                  color: primaryColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -171,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                 child: Center(
                   child: Text(
                     'Hello',
-                    style: TextStyle(fontSize: 24, color: Colors.indigo),
+                    style: TextStyle(fontSize: 24, color: primaryColor),
                   ),
                 ),
               );
@@ -185,7 +188,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Icon(icon, color: Colors.indigo),
+              Icon(icon, color: primaryColor),
               const SizedBox(width: 8),
               Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
             ],

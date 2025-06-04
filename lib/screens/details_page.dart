@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+
 class DetailsPage extends StatelessWidget {
-  static const routName = '/details';
+  static const routeName = '/details';
   final String? title;
   final String? author;
   final String? description;
-  final String? price;
+  final double? price;
 
   const DetailsPage({
     super.key,
@@ -17,11 +19,13 @@ class DetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final routeArguments = ModalRoute.of(context)?.settings.arguments as Map<String, String>;
     final bookTitle = routeArguments['title'];
     final bookAuthor = routeArguments['author'];
     final bookDescription = routeArguments['description'];
     final bookPrice = routeArguments['price'];
+
     return Scaffold(
       appBar: AppBar(title: const Text('Book Details')),
       body: SingleChildScrollView(
@@ -41,7 +45,7 @@ class DetailsPage extends StatelessWidget {
                   child: const Icon(
                     Icons.book,
                     size: 100,
-                    color: Colors.indigo,
+                    color: primaryColor,
                   ),
                 ),
               ),

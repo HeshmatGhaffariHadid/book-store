@@ -1,6 +1,8 @@
-import 'package:book_store/details_page.dart';
-import 'package:book_store/favorite_page.dart';
-import 'package:book_store/home_page.dart';
+import 'package:book_store/screens/details_page.dart';
+import 'package:book_store/screens/favorite_page.dart';
+import 'package:book_store/screens/home_page.dart';
+import 'package:book_store/screens/signin_signup_pages/SignUp_page.dart';
+import 'package:book_store/screens/signin_signup_pages/signIn_page.dart';
 import 'package:flutter/material.dart';
 
 void main(){
@@ -13,11 +15,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: SignInPage.routeName,
       routes: {
         '/' : (context) => HomePage(),
-        FavoritesPage.routName : (context) => FavoritesPage(),
-        DetailsPage.routName : (context) => DetailsPage(),
+        FavoritesPage.routeName : (context) => FavoritesPage(),
+        DetailsPage.routeName : (context) => DetailsPage(),
+        SignInPage.routeName : (context) => SignInPage(),
+        SignUpPage.routeName : (context) => SignUpPage()
       },
     );
   }

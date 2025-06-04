@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+
 class FavoritesPage extends StatelessWidget {
   const FavoritesPage({super.key});
-  static const routName = '/favorite';
+  static const routeName = '/favorite';
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,7 @@ class FavoritesPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               color: Colors.grey[400],
             ),
-            child: const Icon(Icons.book, color: Colors.indigo, size: 38,),
+            child: const Icon(Icons.book, color: primaryColor, size: 38,),
           ),
           title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           subtitle: Column(
@@ -69,7 +71,7 @@ class FavoritesPage extends StatelessWidget {
               Text(
                 price,
                 style: const TextStyle(
-                  color: Colors.indigo,
+                  color: primaryColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
