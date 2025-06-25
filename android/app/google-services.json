@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "738892338108",
+    "project_id": "monograph-98850",
+    "storage_bucket": "monograph-98850.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:738892338108:android:61b97dbf2fa8d5d609d1b9",
+        "android_client_info": {
+          "package_name": "com.example.monograph"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3rD39Jcm0Gu6IDf8lRVsJ7s4zizklHjo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
