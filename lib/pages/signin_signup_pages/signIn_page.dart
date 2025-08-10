@@ -1,5 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../constants.dart';
 import '../../custom-widgets/text_form_field.dart';
 import '../home_page.dart';
@@ -24,6 +24,8 @@ class _SignInPageState extends State<SignInPage> {
   final passwordNode = FocusNode();
 
   bool obSecureText = true;
+  final auth = FirebaseAuth.instance;
+  String errorMessage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +33,13 @@ class _SignInPageState extends State<SignInPage> {
       backgroundColor: const Color(0XFFF5F5F5),
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap:  () => FocusScope.of(context).unfocus(),
+        onTap: () => FocusScope.of(context).unfocus(),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Center(
             child: SingleChildScrollView(
               child: Form(
-                key: _formKey ,
+                key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   spacing: 30,
@@ -70,20 +72,50 @@ class _SignInPageState extends State<SignInPage> {
                         icon:
                             obSecureText
                                 ? Icon(Icons.visibility_off_outlined)
-                                : Icon(Icons.visibility_outlined, color: Colors.indigo),
+                                : Icon(
+                                  Icons.visibility_outlined,
+                                  color: Colors.indigo,
+                                ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(
+                      height: 20,
+                      child: Text(
+                        errorMessage,
+                        style: TextStyle(color: Colors.red),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                     ElevatedButton(
-                      onPressed: () {
-                        if(_formKey.currentState!.validate()){
-                          if(emailController.text == "heshmat@gmail.com" && passwordController.text == "12344321"){
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('You logged in successfully into your account')));
-                            Future.delayed(Duration(seconds: 1));
-                            Navigator.pushReplacementNamed(context, HomePage.routName);
-                          }else{
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User account not found!')));
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          try {
+                            print('🟡 user is signing in...');
+                            await auth
+                                .signInWithEmailAndPassword(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                )
+                                .then((value) {
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    HomePage.routName,
+                                  );
+                                });
+                            print('🟢 user logged in successfully');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Welcome back')),
+                            );
+                          } catch (e) {
+                            print('🔴 Failed to sign-in, error: $e');
+                            setState(() {
+                              errorMessage = e.toString().split('] ')[1];
+                            });
                           }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('User account not found!')),
+                          );
                         }
                       },
                       style: ElevatedButton.styleFrom(

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 import '../../custom-widgets/text_form_field.dart';
@@ -14,20 +15,18 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  final _usernameNode = FocusNode();
   final _emailNode = FocusNode();
   final _passwordNode = FocusNode();
   final _registerNode = FocusNode();
 
   bool obSecureText = true;
+  String errorMessage = '';
+  final auth = FirebaseAuth.instance;
 
   void dispose() {
-    _usernameController.dispose();
-    _usernameNode.dispose();
     _emailController.dispose();
     _emailNode.dispose();
     _passwordController.dispose();
@@ -92,7 +91,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         icon:
                             obSecureText
                                 ? Icon(Icons.visibility_off_outlined)
-                                : Icon(Icons.visibility_outlined,color: Colors.indigo),
+                                : Icon(
+                                  Icons.visibility_outlined,
+                                  color: Colors.indigo,
+                                ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -103,14 +105,40 @@ class _SignUpPageState extends State<SignUpPage> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 20, child: Text(errorMessage, style: TextStyle(
+                      color: Colors.red
+                    ),textAlign: TextAlign.center,),),
                     ElevatedButton(
                       focusNode: _registerNode,
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Your account successfully registered')));
-                          Future.delayed(Duration(seconds: 1));
-                          Navigator.pushReplacementNamed(context, HomePage.routName);
+                          try {
+                            print('🟡 user is signing up...');
+                            await auth
+                                .createUserWithEmailAndPassword(
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                )
+                                .then((value) {
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    HomePage.routName,
+                                  );
+                                });
+                            print('🟢 user signed up successfully');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Welcome back')),
+                            );
+                          } catch (e) {
+                            print('🔴 Failed to sign-up, error: $e');
+                            setState(() {
+                              errorMessage = e.toString().split('] ')[1];
+                            });
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Failed to sign-up!')),
+                          );
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -153,7 +181,6 @@ TextFormField _buildTextField({
         borderSide: BorderSide(color: Colors.blue.shade700, width: 2),
       ),
     ),
-    // forceErrorText: label.split(' ').contains('Password') ? 'hello' : null,
     focusNode: focusNode,
     onSaved: (value) {
       FocusScope.of(context).requestFocus(nextNode);

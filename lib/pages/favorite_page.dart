@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:monograph/pages/details_page.dart';
 import '../constants.dart';
-import '../fav_storage.dart';
+import '../model/fav_storage.dart';
 import '../model/book.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -77,7 +78,7 @@ bool? _isEmpty;
               borderRadius: BorderRadius.circular(4),
               color: Colors.grey[400],
             ),
-            child: const Icon(Icons.book, color: primaryColor, size: 38),
+            child: Icon(Icons.book, color: primaryColor, size: 38),
           ),
           title: Text(
             title,
@@ -90,7 +91,7 @@ bool? _isEmpty;
               const SizedBox(height: 4),
               Text(
                 price,
-                style: const TextStyle(
+                style: TextStyle(
                   color: primaryColor,
                   fontWeight: FontWeight.bold,
                 ),
@@ -105,7 +106,7 @@ bool? _isEmpty;
             },
           ),
           onTap: () {
-            Navigator.pushNamed(context, '/details');
+            Navigator.pushNamed(context, DetailsPage.routeName);
           },
         ),
       ),

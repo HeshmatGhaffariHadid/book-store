@@ -2,7 +2,8 @@ class Book {
   final String title;
   final String author;
   final String description;
+  final String category;
   final String price;
 
-  Book({required this.title, required this.author, required this.description, required this.price});
+  Book({required this.title, required this.author, required this.description,required this.category, required this.price});
 }

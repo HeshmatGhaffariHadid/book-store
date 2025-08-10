@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
 import '../constants.dart';
-import '../fav_storage.dart';
+import '../model/fav_storage.dart';
 import '../model/book.dart';
 
 class DetailsPage extends StatelessWidget {
@@ -26,6 +25,7 @@ class DetailsPage extends StatelessWidget {
     final bookTitle = routeArguments['title'];
     final bookAuthor = routeArguments['author'];
     final bookDescription = routeArguments['description'];
+    final bookCategory = routeArguments['category'];
     final bookPrice = routeArguments['price'];
 
     return Scaffold(
@@ -44,7 +44,7 @@ class DetailsPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     color: Colors.grey[200],
                   ),
-                  child: const Icon(Icons.book, size: 100, color: primaryColor),
+                  child: Icon(Icons.book, size: 100, color: primaryColor),
                 ),
               ),
               const SizedBox(height: 24),
@@ -57,9 +57,17 @@ class DetailsPage extends StatelessWidget {
                 bookAuthor ?? 'No author found',
                 style: TextStyle(fontSize: 16, color: Colors.grey[700]),
               ),
-              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text('Category: $bookCategory', style: TextStyle(
+                  fontSize: 20
+                ),),
+              ),
               Row(
                 children: [
+                  Text('Rating: ', style: TextStyle(
+                    fontSize: 18,
+                  ),),
                   _buildStars(4.5),
                   const SizedBox(width: 8),
                   const Text('4.5 (1,234 reviews)'),
@@ -86,7 +94,15 @@ class DetailsPage extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    FavStorage.addFavorite(Book(title: bookTitle ?? '', author: bookAuthor ?? '', description: '', price: bookPrice ?? ''));
+                    FavStorage.addFavorite(
+                      Book(
+                        title: bookTitle ?? '',
+                        author: bookAuthor ?? '',
+                        description: '',
+                        category: bookCategory ?? '',
+                        price: bookPrice ?? '',
+                      ),
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('$bookTitle book added to favorites'),

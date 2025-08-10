@@ -1,5 +1,7 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:monograph/pages/Category_list.dart';
+import 'package:monograph/pages/signin_signup_pages/signIn_page.dart';
 import '../constants.dart';
 import '../model/book.dart';
 import 'details_page.dart';
@@ -22,20 +24,23 @@ class _HomePageState extends State<HomePage> {
   final authorNode = FocusNode();
   final descNode = FocusNode();
   final pricesNode = FocusNode();
+  final auth = FirebaseAuth.instance;
 
   final List<Book> books = [
     Book(
-      title: 'Learn JAVA',
+      title: 'Wild Life',
       author: 'James Ghosling',
       description:
           'Learning JAVA is quite simple if you choose this book as your main reference in the your coding world',
+      category: 'science',
       price: '20.3',
     ),
     Book(
-      title: 'Learn Programing',
+      title: 'Singing',
       author: 'Ada Lunsalan',
       description:
-          'Learning programing is quite simple if you choose this book as your main reference in the your coding world',
+          'Learning singing is quite simple if you choose this book as your main reference in the your coding world',
+      category: 'art',
       price: '17.9',
     ),
     Book(
@@ -43,6 +48,15 @@ class _HomePageState extends State<HomePage> {
       author: 'Gang of Four',
       description:
           'The most popular and efficient algorithms are described in this valuable book',
+      category: 'programming',
+      price: '49.9',
+    ),
+    Book(
+      title: 'Arabic',
+      author: 'Musa Mashal',
+      description:
+          'Arabic is the most historical and powerful language of the world, about all significant science books are written in Arabic, it is the early Islam language and the holy Quran is written in Arabic',
+      category: 'drama',
       price: '49.9',
     ),
   ];
@@ -53,10 +67,24 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Book Store'),
         actions: [
           IconButton(
-            icon: Icon(Icons.favorite, color: Colors.red[500]),
-            onPressed: () {
-              Navigator.pushNamed(context, FavoritesPage.routeName);
+            icon: Icon(Icons.logout, color: Colors.black87),
+            onPressed: () async {
+              await auth.signOut();
+              Navigator.pop(context);
+              Navigator.pushNamed(context, SignInPage.routeName);
             },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: Icon(
+                Icons.add_shopping_cart_outlined,
+                color: Colors.indigo,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, FavoritesPage.routeName);
+              },
+            ),
           ),
         ],
       ),
@@ -65,9 +93,9 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Featured Books',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color:Colors.grey[800]),
             ),
             const SizedBox(height: 16),
             SizedBox(
@@ -83,6 +111,7 @@ class _HomePageState extends State<HomePage> {
                       books[index].title,
                       books[index].author,
                       books[index].description,
+                      books[index].category,
                       books[index].price,
                     ),
                   );
@@ -90,9 +119,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
+             Text(
               'Popular Categories',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,color: Colors.grey[800]),
             ),
             const SizedBox(height: 16),
             GridView.count(
@@ -105,11 +134,10 @@ class _HomePageState extends State<HomePage> {
               crossAxisSpacing: 16, // Spacing between rows
               mainAxisSpacing: 16, // Spacing between rows
               children: [
-                _buildCategory('Fiction', Icons.menu_book_outlined),
                 _buildCategory('Science', Icons.science_outlined),
-                _buildCategory('History', Icons.history_outlined),
-                _buildCategory('Biography', Icons.person_outline),
-                _buildCategory('Drama', Icons.smart_display_outlined),
+                _buildCategory('Programming', Icons.computer),
+                _buildCategory('Art', Icons.live_tv),
+                _buildCategory('Literature', Icons.language),
               ],
             ),
           ],
@@ -183,18 +211,22 @@ class _HomePageState extends State<HomePage> {
                                 TextButton(
                                   onPressed: () {
                                     setState(() {
-                                      books.insert( 0 ,
+                                      books.insert(
+                                        0,
                                         Book(
                                           title: titleController.text,
                                           author: authorController.text,
                                           description:
                                               descriptionController.text,
                                           price: priceController.text,
+                                          category: '',
                                         ),
                                       );
                                     });
                                     Navigator.pop(context);
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('New book added')));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('New book added')),
+                                    );
                                     titleController.clear();
                                     authorController.clear();
                                     descriptionController.clear();
@@ -252,6 +284,7 @@ class _HomePageState extends State<HomePage> {
     String title,
     String author,
     String description,
+    String category,
     String price,
   ) {
     return GestureDetector(
@@ -263,6 +296,7 @@ class _HomePageState extends State<HomePage> {
             'title': title,
             'author': author,
             'description': description,
+            'category': category,
             'price': price.toString(),
           },
         );
@@ -317,21 +351,7 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return SizedBox(
-                height: 80,
-                width: double.infinity,
-                child: Center(
-                  child: Text(
-                    'Hello',
-                    style: TextStyle(fontSize: 24, color: primaryColor),
-                  ),
-                ),
-              );
-            },
-          );
+Navigator.pushNamed(context, CategoryList.routeName);
         });
       },
       child: Card(
@@ -342,7 +362,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Icon(icon, color: primaryColor),
               const SizedBox(width: 8),
-              Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87)),
             ],
           ),
         ),
