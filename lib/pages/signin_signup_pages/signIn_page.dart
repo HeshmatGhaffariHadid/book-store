@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../constants.dart';
+import '../../constants/constants.dart';
 import '../../custom-widgets/text_form_field.dart';
-import '../home_page.dart';
+import '../home.dart';
 import 'SignUp_page.dart';
 
 class SignInPage extends StatefulWidget {
@@ -99,7 +99,7 @@ class _SignInPageState extends State<SignInPage> {
                                 .then((value) {
                                   Navigator.pushReplacementNamed(
                                     context,
-                                    HomePage.routName,
+                                    HomePage.routeName,
                                   );
                                 });
                             print('🟢 user logged in successfully');

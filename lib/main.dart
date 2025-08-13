@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:monograph/pages/Category_list.dart';
-import 'package:monograph/pages/details_page.dart';
-import 'package:monograph/pages/favorite_page.dart';
-import 'package:monograph/pages/home_page.dart';
+import 'package:monograph/pages/category.dart';
+import 'package:monograph/pages/details.dart';
+import 'package:monograph/pages/favorites.dart';
+import 'package:monograph/pages/home.dart';
 import 'package:monograph/pages/signin_signup_pages/SignUp_page.dart';
 import 'package:monograph/pages/signin_signup_pages/signIn_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,9 +25,9 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(elevation: 1)
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: HomePage.routName,
+      initialRoute: SignInPage.routeName,
       routes: {
-        HomePage.routName : (context) => HomePage(),
+        HomePage.routeName : (context) => HomePage(),
         FavoritesPage.routeName : (context) => FavoritesPage(),
         DetailsPage.routeName : (context) => DetailsPage(),
         SignInPage.routeName : (context) => SignInPage(),
