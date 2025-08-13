@@ -25,6 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool obSecureText = true;
   String errorMessage = '';
   final auth = FirebaseAuth.instance;
+  bool loggingIn = false;
 
   void dispose() {
     _emailController.dispose();
@@ -112,6 +113,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       focusNode: _registerNode,
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            loggingIn = true;
+                          });
                           try {
                             print('🟡 user is signing up...');
                             await auth
@@ -120,6 +124,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                   password: _passwordController.text,
                                 )
                                 .then((value) {
+                              setState(() {
+                                loggingIn = false;
+                              });
                                   Navigator.pushReplacementNamed(
                                     context,
                                     HomePage.routeName,
@@ -132,10 +139,14 @@ class _SignUpPageState extends State<SignUpPage> {
                           } catch (e) {
                             print('🔴 Failed to sign-up, error: $e');
                             setState(() {
+                              loggingIn = false;
                               errorMessage = e.toString().split('] ')[1];
                             });
                           }
                         } else {
+                          setState(() {
+                            loggingIn = false;
+                          });
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Failed to sign-up!')),
                           );
@@ -147,7 +158,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         foregroundColor: Colors.white,
                         elevation: 4,
                       ),
-                      child: Text('Register', style: TextStyle(fontSize: 20)),
+                      child: loggingIn ? CircularProgressIndicator(color: Colors.white,strokeWidth: 1,) : Text('Register', style: TextStyle(fontSize: 20)),
                     ),
                   ],
                 ),

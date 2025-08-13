@@ -26,6 +26,7 @@ class _SignInPageState extends State<SignInPage> {
   bool obSecureText = true;
   final auth = FirebaseAuth.instance;
   String errorMessage = '';
+  bool loggingIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +90,9 @@ class _SignInPageState extends State<SignInPage> {
                     ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            loggingIn = true;
+                          });
                           try {
                             print('🟡 user is signing in...');
                             await auth
@@ -97,6 +101,9 @@ class _SignInPageState extends State<SignInPage> {
                                   password: passwordController.text,
                                 )
                                 .then((value) {
+                                  setState(() {
+                                    loggingIn = false;
+                                  });
                                   Navigator.pushReplacementNamed(
                                     context,
                                     HomePage.routeName,
@@ -110,9 +117,13 @@ class _SignInPageState extends State<SignInPage> {
                             print('🔴 Failed to sign-in, error: $e');
                             setState(() {
                               errorMessage = e.toString().split('] ')[1];
+                              loggingIn = false;
                             });
                           }
                         } else {
+                          setState(() {
+                            loggingIn = false;
+                          });
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('User account not found!')),
                           );
@@ -124,7 +135,7 @@ class _SignInPageState extends State<SignInPage> {
                         foregroundColor: Colors.white,
                         elevation: 4,
                       ),
-                      child: Text('Login', style: TextStyle(fontSize: 20)),
+                      child: loggingIn ? CircularProgressIndicator(color: Colors.white,strokeWidth: 1,) : Text('Login', style: TextStyle(fontSize: 20)),
                     ),
                     Row(
                       children: [
