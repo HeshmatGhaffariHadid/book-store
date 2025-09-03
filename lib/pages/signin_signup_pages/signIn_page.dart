@@ -94,7 +94,6 @@ class _SignInPageState extends State<SignInPage> {
                             loggingIn = true;
                           });
                           try {
-                            print('🟡 user is signing in...');
                             await auth
                                 .signInWithEmailAndPassword(
                                   email: emailController.text,
@@ -109,12 +108,10 @@ class _SignInPageState extends State<SignInPage> {
                                     HomePage.routeName,
                                   );
                                 });
-                            print('🟢 user logged in successfully');
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Welcome back')),
                             );
                           } catch (e) {
-                            print('🔴 Failed to sign-in, error: $e');
                             setState(() {
                               errorMessage = e.toString().split('] ')[1];
                               loggingIn = false;
@@ -135,7 +132,9 @@ class _SignInPageState extends State<SignInPage> {
                         foregroundColor: Colors.white,
                         elevation: 4,
                       ),
-                      child: loggingIn ? CircularProgressIndicator(color: Colors.white,strokeWidth: 1,) : Text('Login', style: TextStyle(fontSize: 20)),
+                      child: loggingIn
+                          ? CircularProgressIndicator(color: Colors.white,strokeWidth: 1,)
+                          : Text('Login', style: TextStyle(fontSize: 20)),
                     ),
                     Row(
                       children: [
@@ -169,27 +168,6 @@ class _SignInPageState extends State<SignInPage> {
           ),
         ),
       ),
-    );
-  }
-
-  TextField _buildTextField({
-    required String label,
-    required TextEditingController controller,
-    required FocusNode focusNode,
-  }) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        enabled: true,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black38, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue.shade700, width: 2),
-        ),
-      ),
-      focusNode: focusNode,
     );
   }
 }

@@ -106,9 +106,14 @@ class _SignUpPageState extends State<SignUpPage> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 20, child: Text(errorMessage, style: TextStyle(
-                      color: Colors.red
-                    ),textAlign: TextAlign.center,),),
+                    SizedBox(
+                      height: 20,
+                      child: Text(
+                        errorMessage,
+                        style: TextStyle(color: Colors.red),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                     ElevatedButton(
                       focusNode: _registerNode,
                       onPressed: () async {
@@ -117,27 +122,24 @@ class _SignUpPageState extends State<SignUpPage> {
                             loggingIn = true;
                           });
                           try {
-                            print('🟡 user is signing up...');
                             await auth
                                 .createUserWithEmailAndPassword(
                                   email: _emailController.text,
                                   password: _passwordController.text,
                                 )
                                 .then((value) {
-                              setState(() {
-                                loggingIn = false;
-                              });
+                                  setState(() {
+                                    loggingIn = false;
+                                  });
                                   Navigator.pushReplacementNamed(
                                     context,
                                     HomePage.routeName,
                                   );
                                 });
-                            print('🟢 user signed up successfully');
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Welcome back')),
                             );
                           } catch (e) {
-                            print('🔴 Failed to sign-up, error: $e');
                             setState(() {
                               loggingIn = false;
                               errorMessage = e.toString().split('] ')[1];
@@ -158,7 +160,16 @@ class _SignUpPageState extends State<SignUpPage> {
                         foregroundColor: Colors.white,
                         elevation: 4,
                       ),
-                      child: loggingIn ? CircularProgressIndicator(color: Colors.white,strokeWidth: 1,) : Text('Register', style: TextStyle(fontSize: 20)),
+                      child:
+                          loggingIn
+                              ? CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 1,
+                              )
+                              : Text(
+                                'Register',
+                                style: TextStyle(fontSize: 20),
+                              ),
                     ),
                   ],
                 ),
@@ -169,32 +180,4 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
-}
-
-TextFormField _buildTextField({
-  required BuildContext context,
-  required String label,
-  required TextEditingController controller,
-  required FocusNode focusNode,
-  required FocusNode nextNode,
-  required Function validate,
-}) {
-  return TextFormField(
-    controller: controller,
-    obscureText: label.split(' ').contains('Password') ? true : false,
-    enabled: true,
-    decoration: InputDecoration(
-      labelText: label,
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.black38, width: 1),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.blue.shade700, width: 2),
-      ),
-    ),
-    focusNode: focusNode,
-    onSaved: (value) {
-      FocusScope.of(context).requestFocus(nextNode);
-    },
-  );
 }
