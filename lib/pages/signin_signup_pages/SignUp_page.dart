@@ -39,7 +39,11 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Back')),
+      appBar: AppBar(
+        backgroundColor: const Color(0XFFF5F5F5),
+        elevation: 0,
+          title: Text('Back'),
+      ),
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => FocusScope.of(context).unfocus(),

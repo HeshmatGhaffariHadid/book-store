@@ -160,6 +160,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0XFFF5F5F5),
         onPressed: _showBottomSheet,
         child: const Icon(Icons.add, color: Colors.indigo, size: 30),
       ),
@@ -169,13 +170,11 @@ class _HomePageState extends State<HomePage> {
   IconData _getCategoryIcon(String category) {
     switch (category.toLowerCase()) {
       case 'science':
-        return Icons.science_outlined;
+        return Icons.science;
       case 'programming':
         return Icons.computer;
       case 'art':
         return Icons.palette;
-      case 'literature':
-        return Icons.menu_book;
       case 'general':
         return Icons.category;
       case 'mathematical':
