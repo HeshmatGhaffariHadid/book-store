@@ -17,6 +17,7 @@ class _DetailsPageState extends State<DetailsPage> {
   String? description;
   String? category;
   String? price;
+  bool _isLoading = false;
 
   @override
   void didChangeDependencies() {
@@ -114,10 +115,13 @@ class _DetailsPageState extends State<DetailsPage> {
             ),
             const SizedBox(height: 30),
             Center(
-              child: ElevatedButton.icon(
+              child: ElevatedButton(
                 onPressed: () async {
                   if (bookId != null) {
                     try {
+                      setState(() {
+                        _isLoading = true;
+                      });
                       await BookService.addToFavorites(bookId!);
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -131,9 +135,13 @@ class _DetailsPageState extends State<DetailsPage> {
                         );
                       }
                     }
+                    finally {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
                   }
                 },
-                label: const Text('Add to Favorites'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
                   foregroundColor: Colors.white,
@@ -142,6 +150,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                   textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
+                child: _isLoading ? CircularProgressIndicator(color: Colors.white, strokeWidth: 1) : Text('Add to Favorites'),
               ),
             ),
           ],
