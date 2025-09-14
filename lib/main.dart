@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monograph/pages/category.dart';
 import 'package:monograph/pages/details.dart';
 import 'package:monograph/pages/favorites.dart';

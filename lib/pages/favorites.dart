@@ -51,7 +51,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
           const SnackBar(content: Text('Book removed from favorites')),
         );
       }
-      _loadFavorites(); // Reload favorites after deletion
+      _loadFavorites();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
