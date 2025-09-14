@@ -28,6 +28,11 @@ class _SignInPageState extends State<SignInPage> {
   String errorMessage = '';
   bool loggingIn = false;
 
+  void _logAuthPerformance(String operation, int elapsedMs, {bool isError = false}) {
+    final message = '🟡 AUTH_PERFORMANCE - $operation: $elapsedMs ms ${isError ? '(ERROR)' : ''}';
+    debugPrint(message);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,12 +75,12 @@ class _SignInPageState extends State<SignInPage> {
                           });
                         },
                         icon:
-                            obSecureText
-                                ? Icon(Icons.visibility_off_outlined)
-                                : Icon(
-                                  Icons.visibility_outlined,
-                                  color: Colors.indigo,
-                                ),
+                        obSecureText
+                            ? Icon(Icons.visibility_off_outlined)
+                            : Icon(
+                          Icons.visibility_outlined,
+                          color: Colors.indigo,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -89,28 +94,38 @@ class _SignInPageState extends State<SignInPage> {
                     ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
+                          final stopwatch = Stopwatch()..start();
+
                           setState(() {
                             loggingIn = true;
+                            errorMessage = '';
                           });
+
                           try {
                             await auth
                                 .signInWithEmailAndPassword(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                )
+                              email: emailController.text,
+                              password: passwordController.text,
+                            )
                                 .then((value) {
-                                  setState(() {
-                                    loggingIn = false;
-                                  });
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    HomePage.routeName,
-                                  );
-                                });
+                              stopwatch.stop();
+                              _logAuthPerformance('signIn', stopwatch.elapsedMilliseconds);
+
+                              setState(() {
+                                loggingIn = false;
+                              });
+                              Navigator.pushReplacementNamed(
+                                context,
+                                HomePage.routeName,
+                              );
+                            });
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Welcome back')),
                             );
                           } catch (e) {
+                            stopwatch.stop();
+                            _logAuthPerformance('signIn', stopwatch.elapsedMilliseconds, isError: true);
+
                             setState(() {
                               errorMessage = e.toString().split('] ')[1];
                               loggingIn = false;
@@ -121,7 +136,7 @@ class _SignInPageState extends State<SignInPage> {
                             loggingIn = false;
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('User account not found!')),
+                            SnackBar(content: Text('Please fill in all required fields!')),
                           );
                         }
                       },

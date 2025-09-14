@@ -78,6 +78,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Add performance logging method
+  void _logAuthPerformance(String operation, int elapsedMs, {bool isError = false}) {
+    final message = '🟡 AUTH_PERFORMANCE - $operation: $elapsedMs ms ${isError ? '(ERROR)' : ''}';
+    debugPrint(message);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,9 +93,28 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.black87),
             onPressed: () async {
-              await auth.signOut();
-              if (mounted) {
-                Navigator.pushReplacementNamed(context, SignInPage.routeName);
+              // Initialize stopwatch for logout
+              final stopwatch = Stopwatch()..start();
+
+              try {
+                await auth.signOut();
+                // Stop and log performance
+                stopwatch.stop();
+                _logAuthPerformance('logout', stopwatch.elapsedMilliseconds);
+
+                if (mounted) {
+                  Navigator.pushReplacementNamed(context, SignInPage.routeName);
+                }
+              } catch (e) {
+                // Stop and log performance with error
+                stopwatch.stop();
+                _logAuthPerformance('logout', stopwatch.elapsedMilliseconds, isError: true);
+
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error during logout: $e')),
+                  );
+                }
               }
             },
           ),

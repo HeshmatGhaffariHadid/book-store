@@ -27,6 +27,11 @@ class _SignUpPageState extends State<SignUpPage> {
   final auth = FirebaseAuth.instance;
   bool loggingIn = false;
 
+  void _logAuthPerformance(String operation, int elapsedMs, {bool isError = false}) {
+    final message = '🟡 AUTH_PERFORMANCE - $operation: $elapsedMs ms ${isError ? '(ERROR)' : ''}';
+    debugPrint(message);
+  }
+
   void dispose() {
     _emailController.dispose();
     _emailNode.dispose();
@@ -42,7 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: AppBar(
         backgroundColor: const Color(0XFFF5F5F5),
         elevation: 0,
-          title: Text('Back'),
+        title: Text('Back'),
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
@@ -94,12 +99,12 @@ class _SignUpPageState extends State<SignUpPage> {
                           });
                         },
                         icon:
-                            obSecureText
-                                ? Icon(Icons.visibility_off_outlined)
-                                : Icon(
-                                  Icons.visibility_outlined,
-                                  color: Colors.indigo,
-                                ),
+                        obSecureText
+                            ? Icon(Icons.visibility_off_outlined)
+                            : Icon(
+                          Icons.visibility_outlined,
+                          color: Colors.indigo,
+                        ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -122,28 +127,39 @@ class _SignUpPageState extends State<SignUpPage> {
                       focusNode: _registerNode,
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
+
+                          final stopwatch = Stopwatch()..start();
+
                           setState(() {
                             loggingIn = true;
+                            errorMessage = '';
                           });
                           try {
                             await auth
                                 .createUserWithEmailAndPassword(
-                                  email: _emailController.text,
-                                  password: _passwordController.text,
-                                )
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                            )
                                 .then((value) {
-                                  setState(() {
-                                    loggingIn = false;
-                                  });
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    HomePage.routeName,
-                                  );
-                                });
+
+                              stopwatch.stop();
+                              _logAuthPerformance('signUp', stopwatch.elapsedMilliseconds);
+
+                              setState(() {
+                                loggingIn = false;
+                              });
+                              Navigator.pushReplacementNamed(
+                                context,
+                                HomePage.routeName,
+                              );
+                            });
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Welcome back')),
                             );
                           } catch (e) {
+                            stopwatch.stop();
+                            _logAuthPerformance('signUp', stopwatch.elapsedMilliseconds, isError: true);
+
                             setState(() {
                               loggingIn = false;
                               errorMessage = e.toString().split('] ')[1];
@@ -165,15 +181,15 @@ class _SignUpPageState extends State<SignUpPage> {
                         elevation: 4,
                       ),
                       child:
-                          loggingIn
-                              ? CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 1,
-                              )
-                              : Text(
-                                'Register',
-                                style: TextStyle(fontSize: 20),
-                              ),
+                      loggingIn
+                          ? CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 1,
+                      )
+                          : Text(
+                        'Register',
+                        style: TextStyle(fontSize: 20),
+                      ),
                     ),
                   ],
                 ),
